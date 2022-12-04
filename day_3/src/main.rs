@@ -10,22 +10,14 @@ static PRIORITIES: [&str; 26] = [
 
 fn main() {
     // Part 1
-    // Somehow the result is wrong and I do not understand why, with the example data it works fine
     let mut rucksacks = file_to_rucksacks("src/input.txt".to_owned());
-    let mut types: Vec<&str> = Vec::new();
+    let mut prio_sum: i32 = 0;
     for rucksack in rucksacks.iter_mut() {
+        println!("{}", rucksack.get_duplicates().len());
         for item in rucksack.get_duplicates().iter() {
-            if !types.contains(item) {
-                types.push(*item);
-            }
+            prio_sum += item_to_priority(*item)
         }
     }
-    let mut prio_sum: i32 = 0;
-    for t in types.iter() {
-        println!("{} - {}", *t, item_to_priority(*t));
-        prio_sum += item_to_priority(*t)
-    }
-
     println!("Summed prio of duplicate items: {}", prio_sum);
 }
 
@@ -70,11 +62,16 @@ impl Rucksack {
 
     pub fn get_duplicates(&mut self) -> Vec<&str> {
         let mut duplicates: Vec<&str> = Vec::new();
+        let mut checked: Vec<String> = Vec::new();
 
         for item in self.compartment1.iter() {
+            if checked.contains(item) {
+                continue;
+            }
             if self.compartment2.contains(item) {
                 duplicates.push(item);
             }
+            checked.push(item.to_owned());
         }
 
         return duplicates;
