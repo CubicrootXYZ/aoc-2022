@@ -9,16 +9,36 @@ static PRIORITIES: [&str; 26] = [
 ];
 
 fn main() {
+    // This all would be way more efficient if done with raw strings and some array/set magic, but I want to try out the OOP features of rust.
+
     // Part 1
     let mut rucksacks = file_to_rucksacks("src/input.txt".to_owned());
     let mut prio_sum: i32 = 0;
     for rucksack in rucksacks.iter_mut() {
-        println!("{}", rucksack.get_duplicates().len());
         for item in rucksack.get_duplicates().iter() {
             prio_sum += item_to_priority(*item)
         }
     }
     println!("Summed prio of duplicate items: {}", prio_sum);
+
+    // Part 2
+    let mut rucksacks = file_to_rucksacks("src/input.txt".to_owned());
+
+    let mut badges_sum = 0;
+    for i in (0..rucksacks.len() - 1).step_by(3) {
+        let group_rucksacks = &mut rucksacks[i..i + 3];
+
+        let items1 = group_rucksacks[1].get_items();
+        let items2 = group_rucksacks[2].get_items();
+
+        for item in group_rucksacks[0].get_items().iter() {
+            if items1.contains(item) && items2.contains(item) {
+                badges_sum += item_to_priority(item);
+                break;
+            }
+        }
+    }
+    println!("Summed badges: {}", badges_sum);
 }
 
 fn file_to_rucksacks(filename: String) -> Vec<Rucksack> {
@@ -75,6 +95,13 @@ impl Rucksack {
         }
 
         return duplicates;
+    }
+
+    pub fn get_items(&mut self) -> Vec<String> {
+        let mut items: Vec<String> = Vec::new();
+        items.append(&mut self.compartment1);
+        items.append(&mut self.compartment2);
+        return items;
     }
 }
 
