@@ -1,7 +1,6 @@
 use std::{
     collections::VecDeque,
     fs::File,
-    io::Split,
     io::{BufRead, BufReader, Read},
 };
 
@@ -11,10 +10,18 @@ fn main() {
     println!("Loaded {} stacks", stack.clone().len());
     let moves = load_moves();
     println!("Loaded {} moves", moves.clone().len());
-    let mut moved_stack = apply_moves_to_stack(stack, moves);
+    let mut moved_stack = apply_moves_to_stack(stack.clone(), moves.clone());
     print!("Top elements are: ");
     for i in 0..9 {
         print!("{}", moved_stack[i as usize].pop_front().unwrap());
+    }
+    print!("\n\n");
+
+    // Part 2
+    let mut moved_stack2 = apply_moves_to_stack_part2(stack, moves);
+    print!("Top elements are: ");
+    for i in 0..9 {
+        print!("{}", moved_stack2[i as usize].pop_front().unwrap());
     }
 }
 
@@ -82,6 +89,24 @@ fn apply_moves_to_stack(
     for mv in moves {
         for i in 0..mv[0] {
             let el = stack[(mv[1] - 1) as usize].pop_front().unwrap();
+            stack[(mv[2] - 1) as usize].insert(0, el);
+        }
+    }
+
+    return stack;
+}
+
+fn apply_moves_to_stack_part2(
+    mut stack: [VecDeque<char>; 9],
+    moves: Vec<[i32; 3]>,
+) -> [VecDeque<char>; 9] {
+    for mv in moves {
+        let mut crane: VecDeque<char> = VecDeque::new();
+        for i in 0..mv[0] {
+            crane.push_front(stack[(mv[1] - 1) as usize].pop_front().unwrap());
+        }
+
+        for el in crane.into_iter() {
             stack[(mv[2] - 1) as usize].insert(0, el);
         }
     }
