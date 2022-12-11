@@ -4,22 +4,26 @@ use monkeys::{get_monkeys, get_test_monkeys};
 use std::collections::VecDeque;
 
 fn main() {
-    let mut monkeys = get_test_monkeys();
+    let mut monkeys = get_monkeys();
 
-    for i in 0..1000 * monkeys.len() {
+    for i in 0..10000 * monkeys.len() {
         let monkey_num = i % monkeys.len();
 
+        let m = monkeys.get_mut(monkey_num).unwrap();
+        let mut moves: Vec<[i64; 2]> = Vec::new();
         let mut mv = [0, 0];
-        while mv[0] >= 0 {
-            let m = monkeys.get_mut(monkey_num).unwrap(); // Outside of the loop it creates an error since we can not borrow a mut twice at the same time
+        loop {
             mv = m.get_move();
-            if mv[0] == 0 {
+            if mv[0] == -1 {
                 break;
             }
+            moves.push(mv);
+        }
 
+        for mv in moves {
             let m_next = monkeys.get_mut(mv[1] as usize).unwrap();
             m_next.add_item(mv[0]);
-            println!("Moved item {} from {} to {}", mv[0], monkey_num, mv[1])
+            //println!("Moved item {} from {} to {}", mv[0], monkey_num, mv[1])
         }
     }
 

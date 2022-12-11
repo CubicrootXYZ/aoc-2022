@@ -1,19 +1,19 @@
 use std::collections::{vec_deque, VecDeque};
 
 pub struct Monkey {
-    items: VecDeque<usize>,
-    operation: Box<dyn Fn(usize) -> usize>,
-    test: Box<dyn Fn(usize) -> bool>,
-    throw_true: usize,
-    throw_false: usize,
-    pub inspected_items: usize,
+    items: VecDeque<i64>,
+    operation: Box<dyn Fn(i64) -> i64>,
+    test: Box<dyn Fn(i64) -> bool>,
+    throw_true: i64,
+    throw_false: i64,
+    pub inspected_items: i64,
 }
 
 impl Monkey {
     // worry level, next monkey id
-    pub fn get_move(&mut self) -> [usize; 2] {
+    pub fn get_move(&mut self) -> [i64; 2] {
         if self.items.len() == 0 {
-            return [0; 2];
+            return [-1; 2];
         }
 
         self.inspected_items += 1;
@@ -27,10 +27,17 @@ impl Monkey {
             next_monkey = self.throw_true;
         }
 
-        return [worry_level, next_monkey];
+        // we search n so that
+        // (n * x) % a == o
+        // (n * x) % b == p
+        // therefore
+        // n % a == o
+        // n % b == p
+        // must be true too, this is given if n is a common denominator of a and b, now do the same for all 8 monkeys :)
+        return [worry_level % 9699690, next_monkey];
     }
 
-    pub fn add_item(&mut self, item: usize) {
+    pub fn add_item(&mut self, item: i64) {
         self.items.push_back(item)
     }
 }
@@ -39,8 +46,8 @@ pub fn get_monkeys() -> Vec<Monkey> {
     let mut monkeys: Vec<Monkey> = Vec::new();
 
     // Monkey 0
-    let m_13 = |x: usize| x * 13;
-    let d_11 = |x: usize| x % 11 == 0;
+    let m_13 = |x: i64| x * 13;
+    let d_11 = |x: i64| x % 11 == 0;
     let mut m = Monkey {
         items: VecDeque::new(),
         operation: Box::new(m_13),
@@ -58,8 +65,8 @@ pub fn get_monkeys() -> Vec<Monkey> {
     monkeys.push(m);
 
     // Monkey 1
-    let a_4 = |x: usize| x + 4;
-    let d_17 = |x: usize| x % 17 == 0;
+    let a_4 = |x: i64| x + 4;
+    let d_17 = |x: i64| x % 17 == 0;
     let mut m = Monkey {
         items: VecDeque::new(),
         operation: Box::new(a_4),
@@ -78,8 +85,8 @@ pub fn get_monkeys() -> Vec<Monkey> {
     monkeys.push(m);
 
     // Monkey 2
-    let m_11 = |x: usize| x * 11;
-    let d_5 = |x: usize| x % 5 == 0;
+    let m_11 = |x: i64| x * 11;
+    let d_5 = |x: i64| x % 5 == 0;
     let mut m = Monkey {
         items: VecDeque::new(),
         operation: Box::new(m_11),
@@ -93,8 +100,8 @@ pub fn get_monkeys() -> Vec<Monkey> {
     monkeys.push(m);
 
     // Monkey 3
-    let a_8 = |x: usize| x + 8;
-    let d_13 = |x: usize| x % 13 == 0;
+    let a_8 = |x: i64| x + 8;
+    let d_13 = |x: i64| x % 13 == 0;
     let mut m = Monkey {
         items: VecDeque::new(),
         operation: Box::new(a_8),
@@ -111,8 +118,8 @@ pub fn get_monkeys() -> Vec<Monkey> {
     monkeys.push(m);
 
     // Monkey 4
-    let m_s = |x: usize| x * x;
-    let d_19 = |x: usize| x % 19 == 0;
+    let m_s = |x: i64| x * x;
+    let d_19 = |x: i64| x % 19 == 0;
     let mut m = Monkey {
         items: VecDeque::new(),
         operation: Box::new(m_s),
@@ -132,8 +139,8 @@ pub fn get_monkeys() -> Vec<Monkey> {
     monkeys.push(m);
 
     // Monkey 5
-    let a_5 = |x: usize| x + 5;
-    let d_2 = |x: usize| x % 2 == 0;
+    let a_5 = |x: i64| x + 5;
+    let d_2 = |x: i64| x % 2 == 0;
     let mut m = Monkey {
         items: VecDeque::new(),
         operation: Box::new(a_5),
@@ -149,8 +156,8 @@ pub fn get_monkeys() -> Vec<Monkey> {
     monkeys.push(m);
 
     // Monkey 6
-    let a_1 = |x: usize| x + 1;
-    let d_3 = |x: usize| x % 3 == 0;
+    let a_1 = |x: i64| x + 1;
+    let d_3 = |x: i64| x % 3 == 0;
     let mut m = Monkey {
         items: VecDeque::new(),
         operation: Box::new(a_1),
@@ -163,8 +170,8 @@ pub fn get_monkeys() -> Vec<Monkey> {
     monkeys.push(m);
 
     // Monkey 7
-    let a_3 = |x: usize| x + 3;
-    let d_7 = |x: usize| x % 7 == 0;
+    let a_3 = |x: i64| x + 3;
+    let d_7 = |x: i64| x % 7 == 0;
     let mut m = Monkey {
         items: VecDeque::new(),
         operation: Box::new(a_3),
@@ -185,8 +192,8 @@ pub fn get_test_monkeys() -> Vec<Monkey> {
     let mut monkeys: Vec<Monkey> = Vec::new();
 
     // Monkey 0
-    let m_19 = |x: usize| x * 19;
-    let d_23 = |x: usize| x % 23 == 0;
+    let m_19 = |x: i64| x * 19;
+    let d_23 = |x: i64| x % 23 == 0;
     let mut m = Monkey {
         items: VecDeque::new(),
         operation: Box::new(m_19),
@@ -200,8 +207,8 @@ pub fn get_test_monkeys() -> Vec<Monkey> {
     monkeys.push(m);
 
     // Monkey 1
-    let a_6 = |x: usize| x + 6;
-    let d_19 = |x: usize| x % 19 == 0;
+    let a_6 = |x: i64| x + 6;
+    let d_19 = |x: i64| x % 19 == 0;
     let mut m = Monkey {
         items: VecDeque::new(),
         operation: Box::new(a_6),
@@ -217,8 +224,8 @@ pub fn get_test_monkeys() -> Vec<Monkey> {
     monkeys.push(m);
 
     // Monkey 2
-    let m_s = |x: usize| x * x;
-    let d_13 = |x: usize| x % 13 == 0;
+    let m_s = |x: i64| x * x;
+    let d_13 = |x: i64| x % 13 == 0;
     let mut m = Monkey {
         items: VecDeque::new(),
         operation: Box::new(m_s),
@@ -233,8 +240,8 @@ pub fn get_test_monkeys() -> Vec<Monkey> {
     monkeys.push(m);
 
     // Monkey 3
-    let a_3 = |x: usize| x + 3;
-    let d_17 = |x: usize| x % 17 == 0;
+    let a_3 = |x: i64| x + 3;
+    let d_17 = |x: i64| x % 17 == 0;
     let mut m = Monkey {
         items: VecDeque::new(),
         operation: Box::new(a_3),
